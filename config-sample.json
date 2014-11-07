@@ -22,14 +22,14 @@
     "Duplicate": "Closed"
   },
   "link_conversion": {
-    "0": "parent of",
-    "1": "child of",
-    "2": "relates to",
-    "3": "duplicates",
-    "4": "blocks",
-    "5": "blocks",
-    "6": "is blocked by",
-    "7": "blocks",
-    "8": "is blocked by"
+    "0": "Relates",
+    "1": "Relates",
+    "2": "Relates",
+    "3": "Duplicate",
+    "4": "Relates",
+    "5": "Relates",
+    "6": "Relates",
+    "7": "Relates",
+    "8": "Relates"
   }
 }

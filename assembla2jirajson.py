@@ -239,7 +239,7 @@ for element in data_input[4]["tickets"]:
 project_output = ''
 for i, element in enumerate(data_input[1]["spaces"]):
     project_output += '{"name": ' + json.dumps(element[1]) + ','
-    project_output += '"key": "' + element[1][0:2].upper() + '",'
+    project_output += '"key": "' + space_key(element[1]) + '",'
     if element[2] != "":
         project_output += '"description": ' + json.dumps(element[2]) + ','
     project_output += '"versions": [' + versions_output[element[0]] + '],'

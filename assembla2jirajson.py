@@ -26,6 +26,9 @@ link_conversion = config["link_conversion"]
 workflow_conversion = config["workflow_conversion"]
 user_conversion = config["user_conversion"]
 
+# The ID of the workflow_property_def_id to be used for jira component
+component_def_id = config["component_def_id"]
+
 input_field = [
     'user_roles, ',
     'spaces, ',
@@ -37,7 +40,8 @@ input_field = [
     'ticket_comments, ',
     'ticket_associations, ',
     'documents, ',
-    'document_versions, ']
+    'document_versions, ',
+    'workflow_property_vals, ']
 
 input_dict = {}
 
@@ -172,6 +176,20 @@ for element in data_input[7]["ticket_comments"]:
         comments_output[ticket_id] += '"body":' + json.dumps(element[5]) + ','
         comments_output[ticket_id] += '"created":"' + element[3] + '"}'
 
+# workflow_property_vals:fields, ["id","workflow_instance_id","space_tool_id","workflow_property_def_id","value"]
+components_output = {}
+project_components = set()
+for element in data_input[11]["workflow_property_vals"]:
+    ticket_id = element[1]
+
+    if element[3] == component_def_id:
+        if ticket_id not in components_output:
+            components_output[ticket_id] = ''
+        else:
+            components_output[ticket_id] += ','
+        components_output[ticket_id] += '"' + element[4] + '"'
+        project_components.add(element[4])
+
 # document_versions:fields, ["id","document_id","version","filename","name","description","created_at","created_by","content_type","filesize","use_as","updated_at","image_filename","ticket_id","has_thumbnail","external_download_uri","external_document_id","external_filesystem_id"]
 attachments_version_output = {}
 for element in data_input[10]["document_versions"]:
@@ -215,9 +233,9 @@ for element in data_input[4]["tickets"]:
         issues_output[space_id] += ','
     issues_output[space_id] += '{"summary": ' + json.dumps(element[5]) + ','
     issues_output[space_id] += '"description": ' + json.dumps(element[7]) + ','
-    issues_output[space_id] += '"status": ' + json.dumps(ticket_status(element[19],data_input)) + ','
-    issues_output[space_id] += '"reporter": ' + json.dumps(reporter_login(element[2],user_conversion)) + ','
-    issues_output[space_id] += '"assignee": ' + json.dumps(reporter_login(element[3],user_conversion)) + ','
+    issues_output[space_id] += '"status": ' + json.dumps(ticket_status(element[19], data_input)) + ','
+    issues_output[space_id] += '"reporter": ' + json.dumps(reporter_login(element[2], user_conversion)) + ','
+    issues_output[space_id] += '"assignee": ' + json.dumps(reporter_login(element[3], user_conversion)) + ','
     issues_output[space_id] += '"created": "' + element[8] + '",'
     if element[10] is not None:
         issues_output[space_id] += '"fixedVersions": [' + json.dumps(ticket_milestone(element[10],data_input)) + '],'
@@ -232,6 +250,8 @@ for element in data_input[4]["tickets"]:
         issues_output[space_id] += '"priority": ' + json.dumps(ticket_priority(element[6])) + ','
     if element[0] in attachments_output:
         issues_output[space_id] += '"attachments": [' + attachments_output[element[0]] + '],'
+    if element[0] in components_output:
+        issues_output[space_id] += '"components": [' + components_output[element[0]] + '],'
     issues_output[space_id] += '"key": "' + space_key(space_id) + '-' + str(element[1]) + '",'
     issues_output[space_id] += '"externalId": "' + str(element[1]) + '"}'
 
@@ -243,6 +263,7 @@ for i, element in enumerate(data_input[1]["spaces"]):
     if element[2] != "":
         project_output += '"description": ' + json.dumps(element[2]) + ','
     project_output += '"versions": [' + versions_output[element[0]] + '],'
+    project_output += '"components": ' + json.dumps(list(project_components)) + ','
     project_output += '"issues": [' + issues_output[element[0]] + ']}'
     if i < len(data_input[1]["spaces"]) - 1:
         project_output += ','

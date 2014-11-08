@@ -233,7 +233,7 @@ for element in data_input[4]["tickets"]:
     if element[0] in attachments_output:
         issues_output[space_id] += '"attachments": [' + attachments_output[element[0]] + '],'
     issues_output[space_id] += '"key": "' + space_key(space_id) + '-' + str(element[1]) + '",'
-    issues_output[space_id] += '"externalId": "' + space_key(space_id) + '-' + str(element[1]) + '"}'
+    issues_output[space_id] += '"externalId": "' + str(element[1]) + '"}'
 
 # spaces:fields, ["id","name","description","wiki_name","page_rank","public_permissions","team_permissions","can_join","can_apply","wiki_format","created_at","updated_at","viewers_can_post","flow_instructions","color","banner","banner_height","style","left_wikimenu","default_showpage","payer_id","is_commercial","amazon_access_key","amazon_secret_key","do_amazon_backup","amazon_backup_cleanup","do_amazon_backup_cleanup","tabs_order","parent_id","is_volunteer","allowed_ips","is_manager","subscriptions_allowed","promo_code","restricted","template_id","commercial_from","catalog_id","commission_status","watcher_permissions","banner_text","banner_link","use_as_template","restricted_date","downgraded_at","plan_subscription_id","team_tab_role","copy_link_status","ip_address","free_configuration_id","last_payer_changed_at","allowed_ips_watcher","active","status","approved","share_permissions","saml_settings","deleted_at","free_unrestricted_date","space_type"]
 project_output = ''
